@@ -124,7 +124,11 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;AZURE_SEARCH_KEY&#39;</span><span class="p">,</span> <span class="s1">&#39;XXX&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">search_images_bing_new</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">term</span><span class="p">,</span> <span class="n">customConfigId</span><span class="p">,</span> <span class="n">min_sz</span><span class="o">=</span><span class="mi">128</span><span class="p">):</span>
+	<span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://api.bing.microsoft.com/v7.0/custom/images/search?&#39;</span> <span class="o">+</span> <span class="s1">&#39;q=&#39;</span> <span class="o">+</span> <span class="n">term</span> <span class="o">+</span> <span class="s1">&#39;&amp;&#39;</span> <span class="o">+</span> <span class="s1">&#39;customconfig=&#39;</span> <span class="o">+</span> <span class="s1">&#39;efb1b149-c219-4091-be6d-14a279c405c4&#39;</span> <span class="o">+</span> <span class="s1">&#39;&amp;&#39;</span> <span class="o">+</span> <span class="s1">&#39;count=150&#39;</span>
+	<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Ocp-Apim-Subscription-Key&#39;</span><span class="p">:</span> <span class="s1">&#39;1be3ada0f2a649d087e9fb39798485a0&#39;</span><span class="p">})</span>
+	<span class="n">search_results</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">L</span><span class="p">([</span><span class="n">img</span><span class="p">[</span><span class="s2">&quot;thumbnailUrl&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">search_results</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">][:</span><span class="mi">150</span><span class="p">]])</span>
 </pre></div>
 
     </div>
@@ -141,80 +145,8 @@ window.onload = wrap_img;
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">search_images_bing</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">search_images_bing</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;grizzly bear&#39;</span><span class="p">)</span>
-<span class="n">ims</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">attrgot</span><span class="p">(</span><span class="s1">&#39;content_url&#39;</span><span class="p">)</span>
-<span class="nb">len</span><span class="p">(</span><span class="n">ims</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dest</span> <span class="o">=</span> <span class="s1">&#39;images/grizzly.jpg&#39;</span>
-<span class="n">download_url</span><span class="p">(</span><span class="n">ims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dest</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">im</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">dest</span><span class="p">)</span>
-<span class="n">im</span><span class="o">.</span><span class="n">to_thumb</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span><span class="mi">128</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bear_types</span> <span class="o">=</span> <span class="s1">&#39;grizzly&#39;</span><span class="p">,</span><span class="s1">&#39;black&#39;</span><span class="p">,</span><span class="s1">&#39;teddy&#39;</span>
-<span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;bears&#39;</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">bear_types</span> <span class="o">=</span> <span class="s1">&#39;hotdog&#39;</span><span class="p">,</span><span class="s1">&#39;random&#39;</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;hotdogs&#39;</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -236,7 +168,7 @@ window.onload = wrap_img;
     <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">bear_types</span><span class="p">:</span>
         <span class="n">dest</span> <span class="o">=</span> <span class="p">(</span><span class="n">path</span><span class="o">/</span><span class="n">o</span><span class="p">)</span>
         <span class="n">dest</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="n">search_images_bing</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s1"> bear&#39;</span><span class="p">)</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">search_images_bing_new</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">o</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">download_images</span><span class="p">(</span><span class="n">dest</span><span class="p">,</span> <span class="n">urls</span><span class="o">=</span><span class="n">results</span><span class="o">.</span><span class="n">attrgot</span><span class="p">(</span><span class="s1">&#39;contentUrl&#39;</span><span class="p">))</span>
 </pre></div>
 
@@ -259,6 +191,22 @@ window.onload = wrap_img;
 </pre></div>
 
     </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(#0) []</pre>
+</div>
+
+</div>
+
 </div>
 </div>
 
